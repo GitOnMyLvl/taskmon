@@ -1,0 +1,84 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  displayName  String
+  xp           Int      @default(0)
+  level        Int      @default(1)
+  streak       Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Relations
+  monster      Monster?
+  quests       Quest[]
+  achievements Achievement[]
+
+  @@map("users")
+}
+
+model Monster {
+  id           String   @id @default(cuid())
+  ownerId      String   @unique
+  species      String   @default("slime")
+  stage        Int      @default(1)
+  xp           Int      @default(0)
+  hunger       Int      @default(100)
+  mood         String   @default("happy") // "happy" | "neutral" | "sad"
+  lastFedAt    DateTime @default(now())
+  lastActiveAt DateTime @default(now())
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Relations
+  owner User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+  @@map("monsters")
+}
+
+model Quest {
+  id           String    @id @default(cuid())
+  userId       String
+  title        String
+  description  String?
+  difficulty   String    @default("normal") // "easy" | "normal" | "hard"
+  type         String    @default("normal") // "daily" | "weekly" | "normal"
+  status       String    @default("open")   // "open" | "done"
+  rewardXp     Int       @default(10)
+  dueAt        DateTime?
+  completedAt  DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("quests")
+}
+
+model Achievement {
+  id        String   @id @default(cuid())
+  userId    String
+  slug      String   // "first_quest_done", "7_day_streak", etc.
+  earnedAt  DateTime @default(now())
+  meta      String?  // Additional achievement data as JSON string
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, slug])
+  @@map("achievements")
+}
+
