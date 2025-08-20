@@ -5,19 +5,38 @@ export class QuestService {
   /**
    * Create a new quest
    */
-  static async createQuest(userId: string, data: CreateQuestRequest): Promise<Quest> {
+  static async createQuest(
+    userId: string,
+    data: CreateQuestRequest
+  ): Promise<Quest> {
+    console.log('🔍 QuestService.createQuest called:', { userId, data });
+
     const { title, description, difficulty, type, rewardXp, dueAt } = data;
+
+    // Clean up empty strings
+    const cleanDescription =
+      description && description.trim() !== '' ? description : null;
+    const cleanDueAt = dueAt && dueAt.trim() !== '' ? new Date(dueAt) : null;
+
+    console.log('🔍 Processed data:', {
+      title,
+      description: cleanDescription,
+      difficulty: difficulty || 'normal',
+      type: type || 'normal',
+      rewardXp: rewardXp || 10,
+      dueAt: cleanDueAt,
+    });
 
     return prisma.quest.create({
       data: {
         userId,
         title,
-        description,
+        description: cleanDescription,
         difficulty: difficulty || 'normal',
         type: type || 'normal',
         rewardXp: rewardXp || 10,
-        dueAt: dueAt ? new Date(dueAt) : null
-      }
+        dueAt: cleanDueAt,
+      },
     });
   }
 
@@ -27,32 +46,35 @@ export class QuestService {
   static async getQuestsByUserId(userId: string): Promise<Quest[]> {
     return prisma.quest.findMany({
       where: { userId },
-      orderBy: [
-        { status: 'asc' },
-        { dueAt: 'asc' },
-        { createdAt: 'desc' }
-      ]
+      orderBy: [{ status: 'asc' }, { dueAt: 'asc' }, { createdAt: 'desc' }],
     });
   }
 
   /**
    * Get a quest by ID
    */
-  static async getQuestById(questId: string, userId: string): Promise<Quest | null> {
+  static async getQuestById(
+    questId: string,
+    userId: string
+  ): Promise<Quest | null> {
     return prisma.quest.findFirst({
       where: {
         id: questId,
-        userId
-      }
+        userId,
+      },
     });
   }
 
   /**
    * Update a quest
    */
-  static async updateQuest(questId: string, userId: string, data: UpdateQuestRequest): Promise<Quest> {
+  static async updateQuest(
+    questId: string,
+    userId: string,
+    data: UpdateQuestRequest
+  ): Promise<Quest> {
     const updateData: any = { ...data };
-    
+
     if (data.dueAt) {
       updateData.dueAt = new Date(data.dueAt);
     }
@@ -60,9 +82,9 @@ export class QuestService {
     return prisma.quest.update({
       where: {
         id: questId,
-        userId
+        userId,
       },
-      data: updateData
+      data: updateData,
     });
   }
 
@@ -73,42 +95,66 @@ export class QuestService {
     await prisma.quest.delete({
       where: {
         id: questId,
-        userId
-      }
+        userId,
+      },
     });
   }
 
   /**
    * Complete a quest and award XP
    */
-  static async completeQuest(questId: string, userId: string): Promise<{
+  static async completeQuest(
+    questId: string,
+    userId: string
+  ): Promise<{
     quest: Quest;
     xpGained: number;
     newLevel: number;
     levelUp: boolean;
   }> {
+    console.log('🔍 QuestService.completeQuest called:', { questId, userId });
+
     const quest = await this.getQuestById(questId, userId);
+    console.log('Quest found:', quest ? 'Yes' : 'No');
+
     if (!quest) {
+      console.log('❌ Quest not found in database');
       throw new Error('Quest not found');
     }
 
+    console.log('Quest status:', quest.status);
     if (quest.status === 'done') {
+      console.log('❌ Quest already completed');
       throw new Error('Quest already completed');
     }
 
     // Calculate XP and level up
     const xpGained = quest.rewardXp;
+    console.log('🔍 XP to be gained:', xpGained);
+
     const user = await prisma.user.findUnique({
-      where: { id: userId }
+      where: { id: userId },
     });
 
     if (!user) {
       throw new Error('User not found');
     }
 
+    console.log('🔍 Current user data:', {
+      currentXp: user.xp,
+      currentLevel: user.level,
+      xpToGain: xpGained,
+    });
+
     const newTotalXp = user.xp + xpGained;
     const newLevel = this.calculateLevel(newTotalXp);
     const levelUp = newLevel > user.level;
+
+    console.log('🔍 Calculated new values:', {
+      newTotalXp,
+      newLevel,
+      levelUp,
+    });
 
     // Update quest and user in a transaction
     const [updatedQuest, updatedUser] = await prisma.$transaction([
@@ -116,23 +162,30 @@ export class QuestService {
         where: { id: questId },
         data: {
           status: 'done',
-          completedAt: new Date()
-        }
+          completedAt: new Date(),
+        },
       }),
       prisma.user.update({
         where: { id: userId },
         data: {
           xp: newTotalXp,
-          level: newLevel
-        }
-      })
+          level: newLevel,
+        },
+      }),
     ]);
+
+    console.log('✅ User updated successfully:', {
+      oldXp: user.xp,
+      newXp: updatedUser.xp,
+      oldLevel: user.level,
+      newLevel: updatedUser.level,
+    });
 
     return {
       quest: updatedQuest,
       xpGained,
       newLevel,
-      levelUp
+      levelUp,
     };
   }
 
@@ -160,12 +213,9 @@ export class QuestService {
       total: quests.length,
       completed: quests.filter(q => q.status === 'done').length,
       open: quests.filter(q => q.status === 'open').length,
-      overdue: quests.filter(q => 
-        q.status === 'open' && 
-        q.dueAt && 
-        q.dueAt < now
-      ).length
+      overdue: quests.filter(
+        q => q.status === 'open' && q.dueAt && q.dueAt < now
+      ).length,
     };
   }
 }
-

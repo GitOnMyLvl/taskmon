@@ -88,21 +88,21 @@ export interface UpdateQuestRequest {
 export const registerSchema = z.object({
   email: z.string().email(),
   password: z.string().min(8),
-  displayName: z.string().min(2).max(50)
+  displayName: z.string().min(2).max(50),
 });
 
 export const loginSchema = z.object({
   email: z.string().email(),
-  password: z.string()
+  password: z.string(),
 });
 
 export const createQuestSchema = z.object({
   title: z.string().min(1).max(100),
-  description: z.string().max(500).optional(),
+  description: z.string().max(500).optional().or(z.literal('')),
   difficulty: z.enum(['easy', 'normal', 'hard']).default('normal'),
   type: z.enum(['daily', 'weekly', 'normal']).default('normal'),
   rewardXp: z.number().min(1).max(1000).default(10),
-  dueAt: z.string().datetime().optional()
+  dueAt: z.string().optional().or(z.literal('')),
 });
 
 export const updateQuestSchema = z.object({
@@ -112,7 +112,7 @@ export const updateQuestSchema = z.object({
   type: z.enum(['daily', 'weekly', 'normal']).optional(),
   rewardXp: z.number().min(1).max(1000).optional(),
   dueAt: z.string().datetime().optional(),
-  status: z.enum(['open', 'done']).optional()
+  status: z.enum(['open', 'done']).optional(),
 });
 
 // JWT payload type
@@ -141,4 +141,3 @@ export interface SocketEvents {
     description: string;
   };
 }
-

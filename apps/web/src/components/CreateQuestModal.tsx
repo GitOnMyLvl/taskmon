@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
 import { questsAPI } from '../services/api';
@@ -28,7 +28,27 @@ export default function CreateQuestModal({ isOpen, onClose }: CreateQuestModalPr
       queryClient.invalidateQueries({ queryKey: ['quests'] });
       handleClose();
     },
+    onError: (error) => {
+      console.error('Failed to create quest:', error);
+      // Mutation wird automatisch zurückgesetzt nach dem Fehler
+    },
   });
+
+  // Reset form when modal opens
+  useEffect(() => {
+    if (isOpen) {
+      setFormData({
+        title: '',
+        description: '',
+        difficulty: 'normal',
+        type: 'normal',
+        rewardXp: 10,
+        dueAt: ''
+      });
+      // Reset mutation state
+      createQuestMutation.reset();
+    }
+  }, [isOpen]); // Nur isOpen als Dependency
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -74,7 +94,8 @@ export default function CreateQuestModal({ isOpen, onClose }: CreateQuestModalPr
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+              transition={{ duration: 0.1 }}
+              className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity z-10"
               onClick={handleClose}
             />
 
@@ -83,7 +104,8 @@ export default function CreateQuestModal({ isOpen, onClose }: CreateQuestModalPr
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full"
+              transition={{ duration: 0.15, ease: "easeOut" }}
+              className="relative inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full z-20"
             >
               <form onSubmit={handleSubmit}>
                 <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">

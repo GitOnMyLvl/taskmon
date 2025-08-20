@@ -6,12 +6,14 @@ import { Quest, CreateQuestRequest } from '../types';
 import QuestCard from '../components/QuestCard';
 import LoadingSpinner from '../components/LoadingSpinner';
 import CreateQuestModal from '../components/CreateQuestModal';
+import { useAuth } from '../contexts/AuthContext';
 
 export default function QuestsPage() {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [filter, setFilter] = useState<'all' | 'open' | 'done'>('all');
   
   const queryClient = useQueryClient();
+  const { updateUser } = useAuth();
 
   const { data: questsData, isLoading } = useQuery({
     queryKey: ['quests'],
@@ -20,9 +22,18 @@ export default function QuestsPage() {
 
   const completeQuestMutation = useMutation({
     mutationFn: questsAPI.complete,
-    onSuccess: () => {
+    onSuccess: (data) => {
+      console.log('✅ Quest completed successfully:', data);
+      
+      // Update user data directly with the response
+      if (data.user) {
+        updateUser(data.user);
+        console.log('🔄 User data updated:', data.user);
+      }
+      
       queryClient.invalidateQueries({ queryKey: ['quests'] });
       queryClient.invalidateQueries({ queryKey: ['monster'] });
+      queryClient.invalidateQueries({ queryKey: ['achievements'] });
     },
   });
 
