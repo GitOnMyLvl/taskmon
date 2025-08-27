@@ -143,6 +143,16 @@ export const achievementsAPI = {
     const response = await api.get('/achievements/unlocked');
     return response.data;
   },
+
+  claim: async (achievementId: string): Promise<{
+    success: boolean;
+    achievement: Achievement;
+    monsterPointsAwarded: number;
+    message: string;
+  }> => {
+    const response = await api.post(`/achievements/${achievementId}/claim`);
+    return response.data;
+  },
 };
 
 export default api;

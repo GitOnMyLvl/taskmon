@@ -76,37 +76,6 @@ export default function DashboardPage() {
             {monster && (
               <div className="space-y-4">
                 <MonsterDisplay monster={monster} />
-                
-                <div className="space-y-3">
-                  <div>
-                    <div className="flex justify-between text-sm text-gray-600 mb-1">
-                      <span>Hunger</span>
-                      <span>{monster.hunger}/100</span>
-                    </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2">
-                      <div
-                        className="h-2 rounded-full transition-all duration-300"
-                        style={{
-                          width: `${monster.hunger}%`,
-                          backgroundColor: monster.hunger > 60 ? '#10b981' : monster.hunger > 30 ? '#f59e0b' : '#ef4444'
-                        }}
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <div className="flex justify-between text-sm text-gray-600 mb-1">
-                      <span>Mood</span>
-                    <span className="capitalize">{monster.mood}</span>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <span className="text-2xl">
-                        {monster.mood === 'happy' ? '😊' : monster.mood === 'neutral' ? '😐' : '😢'}
-                      </span>
-                      <span className="text-sm text-gray-600 capitalize">{monster.mood}</span>
-                    </div>
-                  </div>
-                </div>
               </div>
             )}
           </div>

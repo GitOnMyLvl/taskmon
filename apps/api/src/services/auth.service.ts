@@ -91,16 +91,46 @@ export class AuthService {
       },
     });
 
-    // Create monster for the user
-    await prisma.monster.create({
-      data: {
-        ownerId: user.id,
-        species: 'slime',
-        stage: 1,
-        xp: 0,
-        hunger: 100,
-        mood: 'happy',
-      },
+    // Create all 4 predefined monsters for the user
+    const monsters = await Promise.all([
+      prisma.monster.create({
+        data: {
+          ownerId: user.id,
+          species: 'slime',
+          stage: 1,
+          xp: 0,
+        },
+      }),
+      prisma.monster.create({
+        data: {
+          ownerId: user.id,
+          species: 'dragon',
+          stage: 1,
+          xp: 0,
+        },
+      }),
+      prisma.monster.create({
+        data: {
+          ownerId: user.id,
+          species: 'cat',
+          stage: 1,
+          xp: 0,
+        },
+      }),
+      prisma.monster.create({
+        data: {
+          ownerId: user.id,
+          species: 'dog',
+          stage: 1,
+          xp: 0,
+        },
+      }),
+    ]);
+
+    // Set the first monster (slime) as active
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { activeMonsterId: monsters[0].id },
     });
 
     const { passwordHash: _, ...userWithoutPassword } = user;

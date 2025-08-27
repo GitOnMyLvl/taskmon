@@ -25,46 +25,66 @@ async function main() {
 
   console.log('✅ Created test user:', user.email);
 
-  // Create multiple predefined monsters for the user
+  // Create multiple predefined monsters for the user (using upsert to handle unique constraints)
   const monsters = await Promise.all([
-    prisma.monster.create({
-      data: {
+    prisma.monster.upsert({
+      where: {
+        ownerId_species: {
+          ownerId: user.id,
+          species: 'slime',
+        },
+      },
+      update: {},
+      create: {
         ownerId: user.id,
         species: 'slime',
         stage: 1,
         xp: 25,
-        hunger: 85,
-        mood: 'happy',
       },
     }),
-    prisma.monster.create({
-      data: {
+    prisma.monster.upsert({
+      where: {
+        ownerId_species: {
+          ownerId: user.id,
+          species: 'dragon',
+        },
+      },
+      update: {},
+      create: {
         ownerId: user.id,
         species: 'dragon',
         stage: 1,
         xp: 0,
-        hunger: 100,
-        mood: 'happy',
       },
     }),
-    prisma.monster.create({
-      data: {
+    prisma.monster.upsert({
+      where: {
+        ownerId_species: {
+          ownerId: user.id,
+          species: 'cat',
+        },
+      },
+      update: {},
+      create: {
         ownerId: user.id,
         species: 'cat',
         stage: 1,
         xp: 0,
-        hunger: 100,
-        mood: 'happy',
       },
     }),
-    prisma.monster.create({
-      data: {
+    prisma.monster.upsert({
+      where: {
+        ownerId_species: {
+          ownerId: user.id,
+          species: 'dog',
+        },
+      },
+      update: {},
+      create: {
         ownerId: user.id,
         species: 'dog',
         stage: 1,
         xp: 0,
-        hunger: 100,
-        mood: 'happy',
       },
     }),
   ]);

@@ -39,9 +39,6 @@ model Monster {
   species      String   @default("slime")
   stage        Int      @default(1)
   xp           Int      @default(0)
-  hunger       Int      @default(100)
-  mood         String   @default("happy") // "happy" | "neutral" | "sad"
-  lastFedAt    DateTime @default(now())
   lastActiveAt DateTime @default(now())
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
@@ -50,6 +47,7 @@ model Monster {
   owner        User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   activeFor    User[]   @relation("ActiveMonster")
 
+  @@unique([ownerId, species])
   @@map("monsters")
 }
 
@@ -78,6 +76,7 @@ model Achievement {
   userId    String
   slug      String   // "first_quest_done", "7_day_streak", etc.
   earnedAt  DateTime @default(now())
+  claimed   Boolean  @default(false) // Whether Monster Points have been claimed
   meta      String?  // Additional achievement data as JSON string
 
   // Relations

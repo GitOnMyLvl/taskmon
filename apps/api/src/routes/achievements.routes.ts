@@ -10,7 +10,9 @@ const router = Router();
  */
 router.get('/', authenticateToken, requireUser, async (req, res) => {
   try {
-    const progress = await AchievementService.getAchievementProgress(req.user!.userId);
+    const progress = await AchievementService.getAchievementProgress(
+      req.user!.userId
+    );
 
     res.json(progress);
   } catch (error) {
@@ -25,7 +27,9 @@ router.get('/', authenticateToken, requireUser, async (req, res) => {
  */
 router.get('/unlocked', authenticateToken, requireUser, async (req, res) => {
   try {
-    const achievements = await AchievementService.getUserAchievements(req.user!.userId);
+    const achievements = await AchievementService.getUserAchievements(
+      req.user!.userId
+    );
 
     res.json({ achievements });
   } catch (error) {
@@ -34,5 +38,37 @@ router.get('/unlocked', authenticateToken, requireUser, async (req, res) => {
   }
 });
 
-export default router;
+/**
+ * POST /achievements/:achievementId/claim
+ * Claim Monster Points for an achievement
+ */
+router.post(
+  '/:achievementId/claim',
+  authenticateToken,
+  requireUser,
+  async (req, res) => {
+    try {
+      const { achievementId } = req.params;
+      const result = await AchievementService.claimAchievement(
+        req.user!.userId,
+        achievementId
+      );
 
+      res.json({
+        success: true,
+        achievement: result.achievement,
+        monsterPointsAwarded: result.monsterPointsAwarded,
+        message: `Claimed ${result.monsterPointsAwarded} Monster Points!`,
+      });
+    } catch (error) {
+      console.error('Claim achievement error:', error);
+      if (error instanceof Error) {
+        res.status(400).json({ error: error.message });
+      } else {
+        res.status(500).json({ error: 'Internal server error' });
+      }
+    }
+  }
+);
+
+export default router;

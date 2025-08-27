@@ -87,7 +87,7 @@ export default function CreateQuestModal({ isOpen, onClose }: CreateQuestModalPr
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-50 overflow-y-auto">
+        <div className="fixed top-0 left-0 right-0 bottom-0 w-screen h-screen z-50 overflow-y-auto">
           <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
             {/* Background overlay */}
             <motion.div
@@ -95,7 +95,7 @@ export default function CreateQuestModal({ isOpen, onClose }: CreateQuestModalPr
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.1 }}
-              className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity z-10"
+              className="fixed top-0 left-0 right-0 bottom-0 w-screen h-screen bg-gray-500 bg-opacity-75 transition-opacity z-10"
               onClick={handleClose}
             />
 

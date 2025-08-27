@@ -19,12 +19,6 @@ export const XP_REQUIREMENTS = {
   2: 500,
 } as const;
 
-export const MOOD_ANIMATIONS = {
-  happy: { scale: [1, 1.1, 1], transition: { duration: 2, repeat: Infinity } },
-  neutral: { y: [0, -5, 0], transition: { duration: 3, repeat: Infinity } },
-  sad: { rotate: [0, -5, 5, 0], transition: { duration: 4, repeat: Infinity } }
-} as const;
-
 // Helper functions
 export const getMonsterEmoji = (species: string, stage: number = 1) => {
   return MONSTER_EMOJI_MAP[species]?.[stage - 1] || MONSTER_EMOJI_MAP[species]?.[0] || '🟢';
@@ -40,8 +34,4 @@ export const getEvolutionMessage = (species: string, stage: number) => {
   }
   
   return `Next evolution at ${XP_REQUIREMENTS[stage as keyof typeof XP_REQUIREMENTS]} XP`;
-};
-
-export const getMonsterAnimation = (mood: string) => {
-  return MOOD_ANIMATIONS[mood as keyof typeof MOOD_ANIMATIONS] || {};
 };

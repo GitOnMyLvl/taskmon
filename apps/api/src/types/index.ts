@@ -22,9 +22,6 @@ export interface Monster {
   species: string;
   stage: number;
   xp: number;
-  hunger: number;
-  mood: 'happy' | 'neutral' | 'sad';
-  lastFedAt: Date;
   lastActiveAt: Date;
   createdAt: Date;
   updatedAt: Date;
@@ -50,6 +47,7 @@ export interface Achievement {
   userId: string;
   slug: string;
   earnedAt: Date;
+  claimed: boolean;
   meta: Record<string, any> | null;
 }
 

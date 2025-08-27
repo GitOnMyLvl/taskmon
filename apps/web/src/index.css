@@ -40,6 +40,13 @@
   .xp-fill {
     @apply h-full bg-gradient-to-r from-monster-green to-monster-blue transition-all duration-500 ease-out;
   }
+  
+  .modal-overlay {
+    @apply fixed top-0 left-0 right-0 bottom-0 w-screen h-screen bg-black bg-opacity-50 flex items-center justify-center z-50;
+    position: fixed !important;
+    width: 100vw !important;
+    height: 100vh !important;
+  }
 }
 
 @layer utilities {

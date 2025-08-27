@@ -55,30 +55,6 @@ export class MonsterService {
   }
 
   /**
-   * Feed the active monster
-   */
-  static async feedMonster(userId: string): Promise<Monster> {
-    const monster = await this.getActiveMonsterByUserId(userId);
-    if (!monster) {
-      throw new Error('No active monster found');
-    }
-
-    // Calculate new hunger and mood
-    const newHunger = Math.min(100, monster.hunger + 30);
-    const newMood = this.calculateMood(newHunger);
-
-    return prisma.monster.update({
-      where: { id: monster.id },
-      data: {
-        hunger: newHunger,
-        mood: newMood,
-        lastFedAt: new Date(),
-        lastActiveAt: new Date(),
-      },
-    });
-  }
-
-  /**
    * Update active monster XP and check for evolution
    */
   static async updateMonsterXp(
@@ -113,19 +89,6 @@ export class MonsterService {
   }
 
   /**
-   * Calculate monster mood based on hunger
-   */
-  static calculateMood(hunger: number): 'happy' | 'neutral' | 'sad' {
-    if (hunger >= 80) {
-      return 'happy';
-    } else if (hunger >= 40) {
-      return 'neutral';
-    } else {
-      return 'sad';
-    }
-  }
-
-  /**
    * Calculate monster stage based on XP
    */
   static calculateStage(xp: number): number {
@@ -139,45 +102,18 @@ export class MonsterService {
   }
 
   /**
-   * Get active monster status (hunger decay over time)
+   * Get active monster status
    */
   static async getMonsterStatus(userId: string): Promise<{
     monster: Monster;
-    hungerDecay: number;
   }> {
     const monster = await this.getActiveMonsterByUserId(userId);
     if (!monster) {
       throw new Error('No active monster found');
     }
 
-    // Calculate hunger decay (1 point per hour since last fed)
-    const hoursSinceLastFed =
-      (Date.now() - monster.lastFedAt.getTime()) / (1000 * 60 * 60);
-    const hungerDecay = Math.floor(hoursSinceLastFed);
-
-    // Update hunger if needed
-    if (hungerDecay > 0) {
-      const newHunger = Math.max(0, monster.hunger - hungerDecay);
-      const newMood = this.calculateMood(newHunger);
-
-      const updatedMonster = await prisma.monster.update({
-        where: { id: monster.id },
-        data: {
-          hunger: newHunger,
-          mood: newMood,
-          lastActiveAt: new Date(),
-        },
-      });
-
-      return {
-        monster: updatedMonster,
-        hungerDecay,
-      };
-    }
-
     return {
       monster,
-      hungerDecay: 0,
     };
   }
 
