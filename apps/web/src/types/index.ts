@@ -6,6 +6,7 @@ export interface User {
   xp: number;
   level: number;
   streak: number;
+  lastLoginAt: string;
   createdAt: string;
   updatedAt: string;
 }

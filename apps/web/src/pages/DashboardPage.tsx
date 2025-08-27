@@ -7,6 +7,8 @@ import MonsterDisplay from '../components/MonsterDisplay';
 import XpBar from '../components/XpBar';
 import QuestCard from '../components/QuestCard';
 import LoadingSpinner from '../components/LoadingSpinner';
+import StreakDisplay from '../components/StreakDisplay';
+import StreakInfo from '../components/StreakInfo';
 
 export default function DashboardPage() {
   const { user } = useAuth();
@@ -50,7 +52,7 @@ export default function DashboardPage() {
         <p className="text-gray-600">Ready to complete some quests and feed your monster?</p>
       </motion.div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Monster Section */}
         <motion.div
           initial={{ opacity: 0, x: -20 }}
@@ -85,7 +87,7 @@ export default function DashboardPage() {
                   <div>
                     <div className="flex justify-between text-sm text-gray-600 mb-1">
                       <span>Mood</span>
-                      <span className="capitalize">{monster.mood}</span>
+                    <span className="capitalize">{monster.mood}</span>
                     </div>
                     <div className="flex items-center space-x-2">
                       <span className="text-2xl">
@@ -98,6 +100,16 @@ export default function DashboardPage() {
               </div>
             )}
           </div>
+          
+          {/* Streak Info */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            className="mt-6"
+          >
+            <StreakInfo />
+          </motion.div>
         </motion.div>
 
         {/* Stats and Progress */}
@@ -141,10 +153,7 @@ export default function DashboardPage() {
               </div>
 
               {/* Streak */}
-              <div className="text-center p-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg">
-                <div className="text-2xl font-bold text-purple-600">{user?.streak || 0}</div>
-                <div className="text-sm text-gray-600">Day Streak 🔥</div>
-              </div>
+              <StreakDisplay streak={user?.streak || 0} />
             </div>
           </div>
         </motion.div>

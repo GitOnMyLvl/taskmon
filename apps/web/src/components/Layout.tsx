@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import StreakDisplay from './StreakDisplay';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -57,6 +58,15 @@ export default function Layout({ children }: LayoutProps) {
 
             {/* User menu */}
             <div className="flex items-center space-x-4">
+              {/* Streak Display */}
+              <div className="hidden lg:block">
+                <div className="flex items-center space-x-2 px-3 py-1 bg-gradient-to-r from-orange-50 to-red-50 rounded-lg border border-orange-200">
+                  <span className="text-lg">🔥</span>
+                  <span className="text-sm font-bold text-orange-600">{user?.streak || 0}</span>
+                  <span className="text-xs text-gray-600">days</span>
+                </div>
+              </div>
+              
               <div className="flex items-center space-x-2">
                 <div className="w-8 h-8 bg-primary-600 rounded-full flex items-center justify-center text-white text-sm font-medium">
                   {user?.displayName.charAt(0).toUpperCase()}
@@ -80,25 +90,33 @@ export default function Layout({ children }: LayoutProps) {
       {/* Mobile navigation */}
       <div className="md:hidden bg-white border-b border-gray-200">
         <div className="px-4 py-2">
-          <nav className="flex space-x-4 overflow-x-auto">
-            {navigation.map((item) => {
-              const isActive = location.pathname === item.href;
-              return (
-                <Link
-                  key={item.name}
-                  to={item.href}
-                  className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium whitespace-nowrap transition-colors ${
-                    isActive
-                      ? 'text-primary-600 bg-primary-50'
-                      : 'text-gray-600 hover:text-primary-600 hover:bg-gray-50'
-                  }`}
-                >
-                  <span>{item.icon}</span>
-                  <span>{item.name}</span>
-                </Link>
-              );
-            })}
-          </nav>
+          <div className="flex items-center justify-between mb-2">
+            <nav className="flex space-x-4 overflow-x-auto">
+              {navigation.map((item) => {
+                const isActive = location.pathname === item.href;
+                return (
+                  <Link
+                    key={item.name}
+                    to={item.href}
+                    className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium whitespace-nowrap transition-colors ${
+                      isActive
+                        ? 'text-primary-600 bg-primary-50'
+                        : 'text-gray-600 hover:text-primary-600 hover:bg-gray-50'
+                    }`}
+                  >
+                    <span>{item.icon}</span>
+                    <span>{item.name}</span>
+                  </Link>
+                );
+              })}
+            </nav>
+            
+            {/* Mobile Streak Display */}
+            <div className="flex items-center space-x-1 px-2 py-1 bg-gradient-to-r from-orange-50 to-red-50 rounded-lg border border-orange-200">
+              <span className="text-sm">🔥</span>
+              <span className="text-xs font-bold text-orange-600">{user?.streak || 0}</span>
+            </div>
+          </div>
         </div>
       </div>
 

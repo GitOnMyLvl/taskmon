@@ -28,7 +28,7 @@ TaskMon transforms mundane task management into an engaging adventure. Users cre
 
 - XP and leveling system
 - Achievement system with unlockable rewards
-- Daily streaks tracking
+- **Daily login streaks** with visual feedback
 - Progress visualization
 - Real-time notifications
 
@@ -36,6 +36,7 @@ TaskMon transforms mundane task management into an engaging adventure. Users cre
 
 - Monster status and feeding
 - XP progress bar
+- **Streak display** with animations and progress
 - Quest statistics
 - Recent activity overview
 - Achievement progress
@@ -172,8 +173,9 @@ taskmon/
 ### Authentication
 
 - `POST /api/auth/register` - User registration
-- `POST /api/auth/login` - User login
+- `POST /api/auth/login` - User login (updates streak)
 - `GET /api/auth/me` - Get current user profile
+- `GET /api/auth/streak` - Get streak information
 
 ### Quests
 
@@ -207,6 +209,14 @@ taskmon/
 - **Stage 1**: Slime (0-199 XP)
 - **Stage 2**: Slime Warrior (200-499 XP)
 - **Stage 3**: Slime King (500+ XP)
+
+### Streak System
+
+- **Daily Login Tracking**: Automatically tracks consecutive days of login
+- **Visual Feedback**: Animated streak display with fire emojis
+- **Streak Levels**: Different colors and messages based on streak length
+- **Reset Logic**: Streak resets to 1 if a day is missed
+- **Progress Bar**: Visual progress towards milestone streaks
 
 ### Hunger System
 

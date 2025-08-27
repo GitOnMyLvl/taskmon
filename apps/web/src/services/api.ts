@@ -68,6 +68,11 @@ export const authAPI = {
     const response = await api.get('/auth/me');
     return response.data;
   },
+
+  getStreak: async (): Promise<{ streak: number; lastLoginAt: string; message: string }> => {
+    const response = await api.get('/auth/streak');
+    return response.data;
+  },
 };
 
 // Quests API

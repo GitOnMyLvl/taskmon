@@ -141,7 +141,26 @@ export class AuthService {
       }
 
       console.log('✅ Password verified for user:', email);
-      const { passwordHash: _, ...userWithoutPassword } = user;
+
+      // Update streak and get updated user data
+      const newStreak = await this.updateLoginStreak(user.id);
+      console.log(
+        '🔥 Updated streak for user:',
+        email,
+        'New streak:',
+        newStreak
+      );
+
+      // Get updated user data
+      const updatedUser = await prisma.user.findUnique({
+        where: { id: user.id },
+      });
+
+      if (!updatedUser) {
+        throw new Error('Failed to get updated user data');
+      }
+
+      const { passwordHash: _, ...userWithoutPassword } = updatedUser;
       return userWithoutPassword;
     } catch (error) {
       console.error('❌ Login service error:', error);
@@ -165,6 +184,60 @@ export class AuthService {
 
     const { passwordHash: _, ...userWithoutPassword } = user;
     return userWithoutPassword;
+  }
+
+  /**
+   * Calculate and update user streak on login
+   */
+  static async updateLoginStreak(userId: string): Promise<number> {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { lastLoginAt: true, streak: true },
+    });
+
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    const now = new Date();
+    const lastLogin = new Date(user.lastLoginAt);
+
+    // Reset time to midnight for date comparison
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const lastLoginDate = new Date(
+      lastLogin.getFullYear(),
+      lastLogin.getMonth(),
+      lastLogin.getDate()
+    );
+
+    // Calculate days difference
+    const daysDiff = Math.floor(
+      (today.getTime() - lastLoginDate.getTime()) / (1000 * 60 * 60 * 24)
+    );
+
+    let newStreak = user.streak;
+
+    if (daysDiff === 0) {
+      // Same day login, keep current streak
+      newStreak = user.streak;
+    } else if (daysDiff === 1) {
+      // Consecutive day login, increment streak
+      newStreak = user.streak + 1;
+    } else {
+      // Gap in login, reset streak to 1
+      newStreak = 1;
+    }
+
+    // Update user with new streak and last login time
+    await prisma.user.update({
+      where: { id: userId },
+      data: {
+        streak: newStreak,
+        lastLoginAt: now,
+      },
+    });
+
+    return newStreak;
   }
 
   /**
