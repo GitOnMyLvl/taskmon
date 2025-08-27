@@ -21,11 +21,20 @@ export default function MonsterSwitcher({ isOpen, onClose }: MonsterSwitcherProp
 
   const switchMonsterMutation = useMutation({
     mutationFn: monsterAPI.switch,
-    onSuccess: () => {
+    onSuccess: (data) => {
+      console.log('Monster switched successfully:', data);
+      
       // Invalidate and refetch monster data
       queryClient.invalidateQueries({ queryKey: ['monster'] });
       queryClient.invalidateQueries({ queryKey: ['monsters'] });
+      
+      // Force refetch the monster data
+      queryClient.refetchQueries({ queryKey: ['monster'] });
+      
       onClose();
+    },
+    onError: (error) => {
+      console.error('Error switching monster:', error);
     },
   });
 

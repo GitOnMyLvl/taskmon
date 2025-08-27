@@ -9,12 +9,36 @@ interface MonsterDisplayProps {
 export default function MonsterDisplay({ monster }: MonsterDisplayProps) {
   const getMonsterEmoji = (species: string, stage: number) => {
     const emojiMap: Record<string, string[]> = {
-      'slime': ['🟢', '🟢', '🟢'],
-      'slime-warrior': ['🟢', '🟡', '🟠'],
-      'slime-king': ['🟢', '🟡', '👑']
+      'slime': ['🟢', '🟡', '🟠'],
+      'dragon': ['🐉', '🐲', '🔥'],
+      'cat': ['🐱', '🐈', '🐈‍⬛'],
+      'dog': ['🐕', '🐕‍🦺', '🦮']
     };
     
-    return emojiMap[species]?.[stage - 1] || '🟢';
+    return emojiMap[species]?.[stage - 1] || emojiMap[species]?.[0] || '🟢';
+  };
+
+  const getMonsterName = (species: string) => {
+    const nameMap: Record<string, string> = {
+      'slime': 'Slime',
+      'dragon': 'Dragon',
+      'cat': 'Cat',
+      'dog': 'Dog',
+    };
+    return nameMap[species] || species;
+  };
+
+  const getEvolutionMessage = (species: string, stage: number) => {
+    if (stage >= 3) {
+      return 'Max Evolution';
+    }
+    
+    const xpRequirements = {
+      1: 200,
+      2: 500,
+    };
+    
+    return `Next evolution at ${xpRequirements[stage as keyof typeof xpRequirements]} XP`;
   };
 
   const getMonsterSize = (stage: number) => {
@@ -47,10 +71,10 @@ export default function MonsterDisplay({ monster }: MonsterDisplayProps) {
       
       <div className="mt-4 space-y-2">
         <h3 className="text-lg font-semibold text-gray-900 capitalize">
-          {monster.species.replace('-', ' ')} (Stage {monster.stage})
+          {getMonsterName(monster.species)} (Stage {monster.stage})
         </h3>
         <p className="text-sm text-gray-600">
-          {monster.xp} XP • {monster.species === 'slime-king' ? 'Max Evolution' : `Next evolution at ${monster.stage === 1 ? 200 : 500} XP`}
+          {monster.xp} XP • {getEvolutionMessage(monster.species, monster.stage)}
         </p>
       </div>
     </div>
