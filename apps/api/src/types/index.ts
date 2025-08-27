@@ -10,7 +10,7 @@ export interface User {
   level: number;
   streak: number;
   monsterPoints: number;
-  lastLoginAt: string;
+  lastLoginAt: Date;
   activeMonsterId: string | null;
   createdAt: Date;
   updatedAt: Date;
@@ -32,9 +32,9 @@ export interface Quest {
   userId: string;
   title: string;
   description: string | null;
-  difficulty: 'easy' | 'normal' | 'hard';
-  type: 'daily' | 'weekly' | 'normal';
-  status: 'open' | 'done';
+  difficulty: string;
+  type: string;
+  status: string;
   rewardXp: number;
   dueAt: Date | null;
   completedAt: Date | null;
@@ -48,7 +48,7 @@ export interface Achievement {
   slug: string;
   earnedAt: Date;
   claimed: boolean;
-  meta: Record<string, any> | null;
+  meta: string | null;
 }
 
 // API Request/Response types
@@ -131,10 +131,6 @@ export interface SocketEvents {
     xpGained: number;
     newLevel: number;
     monsterEvolution?: boolean;
-  };
-  'monster:fed': {
-    hunger: number;
-    mood: string;
   };
   'achievement:unlocked': {
     slug: string;

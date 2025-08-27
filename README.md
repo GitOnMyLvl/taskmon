@@ -1,10 +1,10 @@
 # TaskMon 🐾
 
-A gamified to-do app where users complete quests to feed and evolve their virtual monster companions.
+A gamified to-do app where users complete quests to evolve their virtual monster companions.
 
 ## 🎮 Overview
 
-TaskMon transforms mundane task management into an engaging adventure. Users create and complete quests (tasks) to gain XP, level up, and feed their virtual monster. As the monster grows, it evolves through different stages, providing visual motivation and a sense of progression.
+TaskMon transforms mundane task management into an engaging adventure. Users create and complete quests (tasks) to gain XP, level up, and evolve their virtual monster. As the monster grows, it evolves through different stages, providing visual motivation and a sense of progression.
 
 ## ✨ Features
 
@@ -20,8 +20,8 @@ TaskMon transforms mundane task management into an engaging adventure. Users cre
 
 - Virtual monster that grows with your progress
 - Three evolution stages with visual changes
-- Hunger and mood system
-- Feeding mechanics
+- XP-based evolution system
+- Multiple monster species to collect
 - Real-time status updates
 
 ### 🏆 Gamification
@@ -34,7 +34,7 @@ TaskMon transforms mundane task management into an engaging adventure. Users cre
 
 ### 📊 Dashboard
 
-- Monster status and feeding
+- Monster status and evolution progress
 - XP progress bar
 - **Streak display** with animations and progress
 - Quest statistics
@@ -189,7 +189,8 @@ taskmon/
 ### Monster
 
 - `GET /api/monster` - Get monster status
-- `POST /api/monster/feed` - Feed monster
+- `GET /api/monster/all` - Get all user monsters
+- `POST /api/monster/switch/:id` - Switch active monster
 
 ### Achievements
 
@@ -218,11 +219,12 @@ taskmon/
 - **Reset Logic**: Streak resets to 1 if a day is missed
 - **Progress Bar**: Visual progress towards milestone streaks
 
-### Hunger System
+### Monster Collection
 
-- Monster hunger decreases over time
-- Feeding restores hunger and improves mood
-- Mood affects monster animations
+- Multiple monster species available (Slime, Dragon, Cat, Dog)
+- Each monster has independent XP and evolution progress
+- Switch between monsters to manage different companions
+- Collect all species for achievements
 
 ### Achievements
 

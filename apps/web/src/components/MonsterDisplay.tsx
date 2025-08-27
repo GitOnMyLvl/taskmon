@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { motion } from 'framer-motion';
 import { Monster } from '../types';
 import { 
@@ -21,9 +21,8 @@ export default function MonsterDisplay({ monster }: MonsterDisplayProps) {
     if (monster.stage >= 3) return 100; // Max evolution
     
     const currentStageXp = monster.xp;
-    const requiredXp = XP_REQUIREMENTS[monster.stage as keyof typeof XP_REQUIREMENTS] || 0;
+    const requiredXp = XP_REQUIREMENTS[monster.stage as keyof typeof XP_REQUIREMENTS] || 200;
     
-    if (requiredXp === 0) return 100;
     return Math.min((currentStageXp / requiredXp) * 100, 100);
   };
 

@@ -48,7 +48,7 @@ export interface Achievement {
   slug: string;
   earnedAt: string;
   claimed: boolean;
-  meta: Record<string, any> | null;
+  meta: string | null;
   monsterPointsReward?: number;
 }
 
@@ -115,7 +115,6 @@ export interface EvolutionInfo {
 // Monster status response
 export interface MonsterStatusResponse {
   monster: Monster;
-  hungerDecay: number;
   evolutionInfo: EvolutionInfo;
 }
 
@@ -133,6 +132,8 @@ export interface AchievementProgress {
   locked: AchievementDefinition[];
   totalUnlocked: number;
   totalAchievements: number;
+  totalMonsterPoints: number;
+  unclaimedAchievements: Achievement[];
 }
 
 // Socket event types
@@ -142,10 +143,6 @@ export interface SocketEvents {
     xpGained: number;
     newLevel: number;
     monsterEvolution?: boolean;
-  };
-  'monster:fed': {
-    hunger: number;
-    mood: string;
   };
   'achievement:unlocked': {
     slug: string;

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import { monsterAPI, questsAPI } from '../services/api';
@@ -51,7 +51,7 @@ export default function DashboardPage() {
         <h1 className="text-3xl font-bold text-gray-900 mb-2">
           Welcome back, {user?.displayName}! 👋
         </h1>
-        <p className="text-gray-600">Ready to complete some quests and feed your monster?</p>
+        <p className="text-gray-600">Ready to complete some quests and evolve your monster?</p>
       </motion.div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">

@@ -116,10 +116,7 @@ export const monsterAPI = {
     return response.data;
   },
 
-  feed: async (): Promise<{ monster: Monster }> => {
-    const response = await api.post('/monster/feed');
-    return response.data;
-  },
+
 
   getAll: async (): Promise<{ monsters: Monster[]; activeMonster: Monster | null }> => {
     const response = await api.get('/monster/all');

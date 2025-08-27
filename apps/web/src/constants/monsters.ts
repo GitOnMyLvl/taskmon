@@ -28,7 +28,7 @@ export const getMonsterName = (species: string) => {
   return MONSTER_NAME_MAP[species] || species;
 };
 
-export const getEvolutionMessage = (species: string, stage: number) => {
+export const getEvolutionMessage = (_species: string, stage: number) => {
   if (stage >= 3) {
     return 'Max Evolution';
   }

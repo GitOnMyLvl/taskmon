@@ -103,10 +103,10 @@ export function useSocketEvent<T extends keyof SocketEvents>(
   useEffect(() => {
     if (!socket) return;
 
-    socket.on(event, callback);
+    socket.on(event, callback as any);
 
     return () => {
-      socket.off(event, callback);
+      socket.off(event, callback as any);
     };
   }, [socket, event, callback]);
 }

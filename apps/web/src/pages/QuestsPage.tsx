@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import { questsAPI } from '../services/api';
-import { Quest, CreateQuestRequest } from '../types';
+
 import QuestCard from '../components/QuestCard';
 import LoadingSpinner from '../components/LoadingSpinner';
 import CreateQuestModal from '../components/CreateQuestModal';

@@ -92,7 +92,7 @@ export class AchievementService {
         const user = await prisma.user.findUnique({
           where: { id: userId },
         });
-        return user?.streak >= 3;
+        return (user?.streak || 0) >= 3;
       },
     },
     {
@@ -105,7 +105,7 @@ export class AchievementService {
         const user = await prisma.user.findUnique({
           where: { id: userId },
         });
-        return user?.streak >= 7;
+        return (user?.streak || 0) >= 7;
       },
     },
     {
@@ -118,7 +118,7 @@ export class AchievementService {
         const user = await prisma.user.findUnique({
           where: { id: userId },
         });
-        return user?.streak >= 14;
+        return (user?.streak || 0) >= 14;
       },
     },
     {
@@ -131,7 +131,7 @@ export class AchievementService {
         const user = await prisma.user.findUnique({
           where: { id: userId },
         });
-        return user?.streak >= 30;
+        return (user?.streak || 0) >= 30;
       },
     },
 
@@ -212,7 +212,7 @@ export class AchievementService {
         const user = await prisma.user.findUnique({
           where: { id: userId },
         });
-        return user?.level >= 5;
+        return (user?.level || 0) >= 5;
       },
     },
     {
@@ -225,7 +225,7 @@ export class AchievementService {
         const user = await prisma.user.findUnique({
           where: { id: userId },
         });
-        return user?.level >= 10;
+        return (user?.level || 0) >= 10;
       },
     },
     {
@@ -238,7 +238,7 @@ export class AchievementService {
         const user = await prisma.user.findUnique({
           where: { id: userId },
         });
-        return user?.level >= 20;
+        return (user?.level || 0) >= 20;
       },
     },
     {
@@ -251,7 +251,7 @@ export class AchievementService {
         const user = await prisma.user.findUnique({
           where: { id: userId },
         });
-        return user?.level >= 50;
+        return (user?.level || 0) >= 50;
       },
     },
 
@@ -306,7 +306,7 @@ export class AchievementService {
   static async unlockAchievement(
     userId: string,
     slug: string,
-    meta?: Record<string, any>
+    meta?: string
   ): Promise<Achievement> {
     // Check if already unlocked
     const existing = await this.hasAchievement(userId, slug);

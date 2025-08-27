@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { useQuery } from '@tanstack/react-query';
 import { authAPI } from '../services/api';
 import LoadingSpinner from './LoadingSpinner';
