@@ -24,21 +24,57 @@ async function main() {
 
   console.log('✅ Created test user:', user.email);
 
-  // Create monster for the user
-  const monster = await prisma.monster.upsert({
-    where: { ownerId: user.id },
-    update: {},
-    create: {
-      ownerId: user.id,
-      species: 'slime',
-      stage: 1,
-      xp: 25,
-      hunger: 85,
-      mood: 'happy',
-    },
+  // Create multiple predefined monsters for the user
+  const monsters = await Promise.all([
+    prisma.monster.create({
+      data: {
+        ownerId: user.id,
+        species: 'slime',
+        stage: 1,
+        xp: 25,
+        hunger: 85,
+        mood: 'happy',
+      },
+    }),
+    prisma.monster.create({
+      data: {
+        ownerId: user.id,
+        species: 'dragon',
+        stage: 1,
+        xp: 0,
+        hunger: 100,
+        mood: 'happy',
+      },
+    }),
+    prisma.monster.create({
+      data: {
+        ownerId: user.id,
+        species: 'cat',
+        stage: 1,
+        xp: 0,
+        hunger: 100,
+        mood: 'happy',
+      },
+    }),
+    prisma.monster.create({
+      data: {
+        ownerId: user.id,
+        species: 'dog',
+        stage: 1,
+        xp: 0,
+        hunger: 100,
+        mood: 'happy',
+      },
+    }),
+  ]);
+
+  // Set the first monster (slime) as active for the user
+  await prisma.user.update({
+    where: { id: user.id },
+    data: { activeMonsterId: monsters[0].id },
   });
 
-  console.log('✅ Created monster for user');
+  console.log('✅ Created 4 predefined monsters for user');
 
   // Create some sample quests
   const quests = await Promise.all([

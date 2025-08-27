@@ -118,6 +118,16 @@ export const monsterAPI = {
     const response = await api.post('/monster/feed');
     return response.data;
   },
+
+  getAll: async (): Promise<{ monsters: Monster[]; activeMonster: Monster | null }> => {
+    const response = await api.get('/monster/all');
+    return response.data;
+  },
+
+  switch: async (monsterId: string): Promise<{ monster: Monster }> => {
+    const response = await api.post(`/monster/switch/${monsterId}`);
+    return response.data;
+  },
 };
 
 // Achievements API

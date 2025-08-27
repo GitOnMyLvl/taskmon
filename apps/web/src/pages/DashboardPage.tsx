@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import { monsterAPI, questsAPI } from '../services/api';
@@ -9,9 +9,11 @@ import QuestCard from '../components/QuestCard';
 import LoadingSpinner from '../components/LoadingSpinner';
 import StreakDisplay from '../components/StreakDisplay';
 import StreakInfo from '../components/StreakInfo';
+import MonsterSwitcher from '../components/MonsterSwitcher';
 
 export default function DashboardPage() {
   const { user } = useAuth();
+  const [showMonsterSwitcher, setShowMonsterSwitcher] = useState(false);
 
   const { data: monsterData, isLoading: monsterLoading } = useQuery({
     queryKey: ['monster'],
@@ -61,7 +63,15 @@ export default function DashboardPage() {
           className="lg:col-span-1"
         >
           <div className="card">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">Your Monster</h2>
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-semibold text-gray-900">Your Monster</h2>
+              <button
+                onClick={() => setShowMonsterSwitcher(true)}
+                className="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded-md transition-colors"
+              >
+                Switch Monster
+              </button>
+            </div>
             
             {monster && (
               <div className="space-y-4">
@@ -187,6 +197,12 @@ export default function DashboardPage() {
           )}
         </div>
       </motion.div>
+
+      {/* Monster Switcher Modal */}
+      <MonsterSwitcher 
+        isOpen={showMonsterSwitcher} 
+        onClose={() => setShowMonsterSwitcher(false)} 
+      />
     </div>
   );
 }

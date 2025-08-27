@@ -11,28 +11,30 @@ datasource db {
 }
 
 model User {
-  id           String   @id @default(cuid())
-  email        String   @unique
-  passwordHash String
-  displayName  String
-  xp           Int      @default(0)
-  level        Int      @default(1)
-  streak       Int      @default(0)
-  lastLoginAt  DateTime @default(now())
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id              String   @id @default(cuid())
+  email           String   @unique
+  passwordHash    String
+  displayName     String
+  xp              Int      @default(0)
+  level           Int      @default(1)
+  streak          Int      @default(0)
+  lastLoginAt     DateTime @default(now())
+  activeMonsterId String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 
   // Relations
-  monster      Monster?
-  quests       Quest[]
-  achievements Achievement[]
+  monsters        Monster[]
+  activeMonster   Monster? @relation("ActiveMonster", fields: [activeMonsterId], references: [id])
+  quests          Quest[]
+  achievements    Achievement[]
 
   @@map("users")
 }
 
 model Monster {
   id           String   @id @default(cuid())
-  ownerId      String   @unique
+  ownerId      String
   species      String   @default("slime")
   stage        Int      @default(1)
   xp           Int      @default(0)
@@ -44,7 +46,8 @@ model Monster {
   updatedAt    DateTime @updatedAt
 
   // Relations
-  owner User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  owner        User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  activeFor    User[]   @relation("ActiveMonster")
 
   @@map("monsters")
 }
