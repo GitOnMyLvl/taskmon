@@ -19,6 +19,7 @@ async function main() {
       xp: 50,
       level: 1,
       streak: 3,
+      monsterPoints: 0,
     },
   });
 

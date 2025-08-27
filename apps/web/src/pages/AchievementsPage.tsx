@@ -18,11 +18,12 @@ export default function AchievementsPage() {
     );
   }
 
-  const { unlocked, locked, totalUnlocked, totalAchievements } = achievementsData || {
+  const { unlocked, locked, totalUnlocked, totalAchievements, totalMonsterPoints } = achievementsData || {
     unlocked: [],
     locked: [],
     totalUnlocked: 0,
-    totalAchievements: 0
+    totalAchievements: 0,
+    totalMonsterPoints: 0
   };
 
   const progressPercentage = totalAchievements > 0 ? (totalUnlocked / totalAchievements) * 100 : 0;
@@ -42,10 +43,26 @@ export default function AchievementsPage() {
         className="card"
       >
         <div className="text-center mb-6">
-          <div className="text-4xl font-bold text-primary-600 mb-2">
-            {totalUnlocked} / {totalAchievements}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+            <div>
+              <div className="text-3xl font-bold text-primary-600 mb-1">
+                {totalUnlocked} / {totalAchievements}
+              </div>
+              <div className="text-sm text-gray-600">Achievements</div>
+            </div>
+            <div>
+              <div className="text-3xl font-bold text-purple-600 mb-1">
+                {totalMonsterPoints}
+              </div>
+              <div className="text-sm text-gray-600">Monster Points</div>
+            </div>
+            <div>
+              <div className="text-3xl font-bold text-green-600 mb-1">
+                {progressPercentage.toFixed(1)}%
+              </div>
+              <div className="text-sm text-gray-600">Complete</div>
+            </div>
           </div>
-          <div className="text-lg text-gray-600 mb-4">Achievements Unlocked</div>
           
           {/* Progress Bar */}
           <div className="w-full bg-gray-200 rounded-full h-4 mb-4">
@@ -86,17 +103,37 @@ export default function AchievementsPage() {
                     </div>
                   </div>
                   <div className="flex-1">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-1">
-                      {achievement.slug.split('_').map(word => 
-                        word.charAt(0).toUpperCase() + word.slice(1)
-                      ).join(' ')}
-                    </h3>
+                    <div className="flex items-center justify-between mb-1">
+                      <h3 className="text-lg font-semibold text-gray-900">
+                        {achievement.slug.split('_').map(word => 
+                          word.charAt(0).toUpperCase() + word.slice(1)
+                        ).join(' ')}
+                      </h3>
+                      <div className="flex items-center space-x-1 px-2 py-1 bg-purple-100 rounded-full">
+                        <span className="text-xs">💎</span>
+                        <span className="text-xs font-bold text-purple-600">
+                          {achievement.monsterPointsReward || 0}
+                        </span>
+                      </div>
+                    </div>
                     <p className="text-sm text-gray-600 mb-2">
                       {achievement.slug === 'first_quest_done' && 'Complete your first quest'}
-                      {achievement.slug === '7_day_streak' && 'Maintain a 7-day streak'}
+                      {achievement.slug === '5_quests_completed' && 'Complete 5 quests'}
                       {achievement.slug === '10_quests_completed' && 'Complete 10 quests'}
-                      {achievement.slug === 'monster_evolution' && 'Evolve your monster to stage 2'}
+                      {achievement.slug === '25_quests_completed' && 'Complete 25 quests'}
+                      {achievement.slug === '3_day_streak' && 'Maintain a 3-day streak'}
+                      {achievement.slug === '7_day_streak' && 'Maintain a 7-day streak'}
+                      {achievement.slug === '14_day_streak' && 'Maintain a 14-day streak'}
+                      {achievement.slug === '30_day_streak' && 'Maintain a 30-day streak'}
+                      {achievement.slug === 'first_monster_evolution' && 'Evolve your first monster to stage 2'}
+                      {achievement.slug === 'second_monster_evolution' && 'Evolve a second monster to stage 2'}
+                      {achievement.slug === 'third_monster_evolution' && 'Evolve a third monster to stage 2'}
+                      {achievement.slug === 'all_monsters_evolved' && 'Evolve all your monsters to stage 2'}
+                      {achievement.slug === 'level_5' && 'Reach level 5'}
                       {achievement.slug === 'level_10' && 'Reach level 10'}
+                      {achievement.slug === 'level_20' && 'Reach level 20'}
+                      {achievement.slug === 'level_50' && 'Reach level 50'}
+                      {achievement.slug === 'monster_collector' && 'Own all 4 different monster species'}
                     </p>
                     <div className="text-xs text-gray-500">
                       Unlocked {new Date(achievement.earnedAt).toLocaleDateString()}
@@ -133,9 +170,17 @@ export default function AchievementsPage() {
                     </div>
                   </div>
                   <div className="flex-1">
-                    <h3 className="text-lg font-semibold text-gray-400 mb-1">
-                      {achievement.title}
-                    </h3>
+                    <div className="flex items-center justify-between mb-1">
+                      <h3 className="text-lg font-semibold text-gray-400">
+                        {achievement.title}
+                      </h3>
+                      <div className="flex items-center space-x-1 px-2 py-1 bg-purple-100 rounded-full">
+                        <span className="text-xs">💎</span>
+                        <span className="text-xs font-bold text-purple-600">
+                          {achievement.monsterPointsReward}
+                        </span>
+                      </div>
+                    </div>
                     <p className="text-sm text-gray-500 mb-2">
                       {achievement.description}
                     </p>

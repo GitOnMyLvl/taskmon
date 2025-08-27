@@ -9,6 +9,9 @@ export interface User {
   xp: number;
   level: number;
   streak: number;
+  monsterPoints: number;
+  lastLoginAt: string;
+  activeMonsterId: string | null;
   createdAt: Date;
   updatedAt: Date;
 }

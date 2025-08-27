@@ -6,7 +6,9 @@ export interface User {
   xp: number;
   level: number;
   streak: number;
+  monsterPoints: number;
   lastLoginAt: string;
+  activeMonsterId: string | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -55,6 +57,7 @@ export interface AchievementDefinition {
   slug: string;
   title: string;
   description: string;
+  monsterPointsReward: number;
 }
 
 // API Request/Response types

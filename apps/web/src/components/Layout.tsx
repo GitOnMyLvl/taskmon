@@ -58,6 +58,15 @@ export default function Layout({ children }: LayoutProps) {
 
             {/* User menu */}
             <div className="flex items-center space-x-4">
+              {/* Monster Points Display */}
+              <div className="hidden lg:block">
+                <div className="flex items-center space-x-2 px-3 py-1 bg-gradient-to-r from-purple-50 to-indigo-50 rounded-lg border border-purple-200">
+                  <span className="text-lg">💎</span>
+                  <span className="text-sm font-bold text-purple-600">{user?.monsterPoints || 0}</span>
+                  <span className="text-xs text-gray-600">MP</span>
+                </div>
+              </div>
+              
               {/* Streak Display */}
               <div className="hidden lg:block">
                 <div className="flex items-center space-x-2 px-3 py-1 bg-gradient-to-r from-orange-50 to-red-50 rounded-lg border border-orange-200">
@@ -111,10 +120,19 @@ export default function Layout({ children }: LayoutProps) {
               })}
             </nav>
             
-            {/* Mobile Streak Display */}
-            <div className="flex items-center space-x-1 px-2 py-1 bg-gradient-to-r from-orange-50 to-red-50 rounded-lg border border-orange-200">
-              <span className="text-sm">🔥</span>
-              <span className="text-xs font-bold text-orange-600">{user?.streak || 0}</span>
+            {/* Mobile Stats Display */}
+            <div className="flex items-center space-x-2">
+              {/* Mobile Monster Points */}
+              <div className="flex items-center space-x-1 px-2 py-1 bg-gradient-to-r from-purple-50 to-indigo-50 rounded-lg border border-purple-200">
+                <span className="text-sm">💎</span>
+                <span className="text-xs font-bold text-purple-600">{user?.monsterPoints || 0}</span>
+              </div>
+              
+              {/* Mobile Streak Display */}
+              <div className="flex items-center space-x-1 px-2 py-1 bg-gradient-to-r from-orange-50 to-red-50 rounded-lg border border-orange-200">
+                <span className="text-sm">🔥</span>
+                <span className="text-xs font-bold text-orange-600">{user?.streak || 0}</span>
+              </div>
             </div>
           </div>
         </div>
