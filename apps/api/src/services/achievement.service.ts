@@ -21,11 +21,11 @@ export class AchievementService {
         const completedQuests = await prisma.quest.count({
           where: {
             userId,
-            status: 'done'
-          }
+            status: 'done',
+          },
         });
         return completedQuests >= 1;
-      }
+      },
     },
     {
       slug: '7_day_streak',
@@ -33,10 +33,10 @@ export class AchievementService {
       description: 'Maintain a 7-day streak',
       condition: async (userId: string) => {
         const user = await prisma.user.findUnique({
-          where: { id: userId }
+          where: { id: userId },
         });
         return user?.streak >= 7;
-      }
+      },
     },
     {
       slug: '10_quests_completed',
@@ -46,22 +46,23 @@ export class AchievementService {
         const completedQuests = await prisma.quest.count({
           where: {
             userId,
-            status: 'done'
-          }
+            status: 'done',
+          },
         });
         return completedQuests >= 10;
-      }
+      },
     },
     {
       slug: 'monster_evolution',
       title: 'Evolution Champion',
       description: 'Evolve your monster to stage 2',
       condition: async (userId: string) => {
-        const monster = await prisma.monster.findUnique({
-          where: { ownerId: userId }
+        const user = await prisma.user.findUnique({
+          where: { id: userId },
+          include: { activeMonster: true },
         });
-        return monster?.stage >= 2;
-      }
+        return user?.activeMonster?.stage >= 2;
+      },
     },
     {
       slug: 'level_10',
@@ -69,11 +70,11 @@ export class AchievementService {
       description: 'Reach level 10',
       condition: async (userId: string) => {
         const user = await prisma.user.findUnique({
-          where: { id: userId }
+          where: { id: userId },
         });
         return user?.level >= 10;
-      }
-    }
+      },
+    },
   ];
 
   /**
@@ -82,7 +83,7 @@ export class AchievementService {
   static async getUserAchievements(userId: string): Promise<Achievement[]> {
     return prisma.achievement.findMany({
       where: { userId },
-      orderBy: { earnedAt: 'desc' }
+      orderBy: { earnedAt: 'desc' },
     });
   }
 
@@ -94,9 +95,9 @@ export class AchievementService {
       where: {
         userId_slug: {
           userId,
-          slug
-        }
-      }
+          slug,
+        },
+      },
     });
     return !!achievement;
   }
@@ -104,7 +105,11 @@ export class AchievementService {
   /**
    * Unlock an achievement for a user
    */
-  static async unlockAchievement(userId: string, slug: string, meta?: Record<string, any>): Promise<Achievement> {
+  static async unlockAchievement(
+    userId: string,
+    slug: string,
+    meta?: Record<string, any>
+  ): Promise<Achievement> {
     // Check if already unlocked
     const existing = await this.hasAchievement(userId, slug);
     if (existing) {
@@ -115,8 +120,8 @@ export class AchievementService {
       data: {
         userId,
         slug,
-        meta
-      }
+        meta,
+      },
     });
   }
 
@@ -128,11 +133,17 @@ export class AchievementService {
 
     for (const achievement of this.ACHIEVEMENTS) {
       try {
-        const hasAchievement = await this.hasAchievement(userId, achievement.slug);
+        const hasAchievement = await this.hasAchievement(
+          userId,
+          achievement.slug
+        );
         if (!hasAchievement) {
           const conditionMet = await achievement.condition(userId);
           if (conditionMet) {
-            const unlocked = await this.unlockAchievement(userId, achievement.slug);
+            const unlocked = await this.unlockAchievement(
+              userId,
+              achievement.slug
+            );
             unlockedAchievements.push(unlocked);
           }
         }
@@ -147,7 +158,9 @@ export class AchievementService {
   /**
    * Get achievement definition by slug
    */
-  static getAchievementDefinition(slug: string): AchievementDefinition | undefined {
+  static getAchievementDefinition(
+    slug: string
+  ): AchievementDefinition | undefined {
     return this.ACHIEVEMENTS.find(a => a.slug === slug);
   }
 
@@ -171,8 +184,7 @@ export class AchievementService {
       unlocked: unlockedAchievements,
       locked: lockedAchievements,
       totalUnlocked: unlockedAchievements.length,
-      totalAchievements: this.ACHIEVEMENTS.length
+      totalAchievements: this.ACHIEVEMENTS.length,
     };
   }
 }
-

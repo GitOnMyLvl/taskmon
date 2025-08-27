@@ -47,6 +47,8 @@ api.interceptors.response.use(
       localStorage.removeItem('accessToken');
       localStorage.removeItem('user');
       window.location.href = '/login';
+    } else if (error.response?.status >= 500) {
+      console.error('Server error:', error.response?.data);
     }
     return Promise.reject(error);
   }

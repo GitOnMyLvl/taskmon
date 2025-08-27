@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { monsterAPI } from '../services/api';
 import LoadingSpinner from './LoadingSpinner';
+import { getMonsterEmoji, getMonsterName } from '../constants/monsters';
 
 interface MonsterSwitcherProps {
   isOpen: boolean;
@@ -21,41 +22,17 @@ export default function MonsterSwitcher({ isOpen, onClose }: MonsterSwitcherProp
 
   const switchMonsterMutation = useMutation({
     mutationFn: monsterAPI.switch,
-    onSuccess: (data) => {
-      console.log('Monster switched successfully:', data);
-      
+    onSuccess: () => {
       // Invalidate and refetch monster data
       queryClient.invalidateQueries({ queryKey: ['monster'] });
       queryClient.invalidateQueries({ queryKey: ['monsters'] });
-      
-      // Force refetch the monster data
-      queryClient.refetchQueries({ queryKey: ['monster'] });
-      
       onClose();
-    },
-    onError: (error) => {
-      console.error('Error switching monster:', error);
     },
   });
 
-  const getMonsterEmoji = (species: string) => {
-    const emojiMap: Record<string, string> = {
-      slime: '🟢',
-      dragon: '🐉',
-      cat: '🐱',
-      dog: '🐕',
-    };
-    return emojiMap[species] || '🟢';
-  };
-
-  const getMonsterName = (species: string) => {
-    const nameMap: Record<string, string> = {
-      slime: 'Slime',
-      dragon: 'Dragon',
-      cat: 'Cat',
-      dog: 'Dog',
-    };
-    return nameMap[species] || species;
+  // Use shared helper functions for consistency
+  const getMonsterEmojiForSwitcher = (species: string) => {
+    return getMonsterEmoji(species, 1); // Always show stage 1 emoji in switcher
   };
 
   const handleMonsterSelect = (monsterId: string) => {
@@ -123,7 +100,7 @@ export default function MonsterSwitcher({ isOpen, onClose }: MonsterSwitcherProp
                   >
                     <div className="text-center">
                       <div className="text-3xl mb-2">
-                        {getMonsterEmoji(monster.species)}
+                        {getMonsterEmojiForSwitcher(monster.species)}
                       </div>
                       <div className="font-semibold text-gray-900">
                         {getMonsterName(monster.species)}

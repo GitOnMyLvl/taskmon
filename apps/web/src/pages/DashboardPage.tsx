@@ -37,9 +37,6 @@ export default function DashboardPage() {
   const quests = questsData?.quests || [];
   const stats = questsData?.stats;
 
-  // Debug logging
-  console.log('Current monster data:', monster);
-
   // Get recent quests (last 5)
   const recentQuests = quests.slice(0, 5);
 
